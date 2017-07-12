@@ -95,9 +95,21 @@ export default Component.extend({
 
       assert(`[ember-crumbly] \`route:${path}\` was not found`, route);
 
-      let breadCrumb = copy(getWithDefault(route, 'breadCrumb', {
-        title: classify(name)
-      }));
+      let breadCrumb;
+      if (!path.endsWith('_loading')) {
+        breadCrumb = copy(getWithDefault(route, 'breadCrumb', {
+          title: classify(name)
+        }));
+      } else {
+        const mainRoute = this._lookupRoute(path.slice(0, -8));
+        breadCrumb = copy(getWithDefault(mainRoute, 'breadCrumb', {
+          title: classify(name)
+        }));
+        if (!breadCrumb.hasOwnProperty('loading')) {
+          return;
+        }
+        setProperties(breadCrumb, { title: breadCrumb.loading });
+      }
 
       if (typeOf(breadCrumb) === 'null') {
         return;
