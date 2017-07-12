@@ -105,10 +105,12 @@ export default Component.extend({
         breadCrumb = copy(getWithDefault(mainRoute, 'breadCrumb', {
           title: classify(name)
         }));
-        if (!breadCrumb.hasOwnProperty('loading')) {
+        if ((typeOf(breadCrumb) === 'null') || (!breadCrumb.hasOwnProperty('loading'))) {
           return;
         }
-        setProperties(breadCrumb, { title: breadCrumb.loading });
+        if (breadCrumb.hasOwnProperty('loading')) {
+          setProperties(breadCrumb, { title: breadCrumb.loading });
+        }
       }
 
       if (typeOf(breadCrumb) === 'null') {
